@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.models import db, ChatMessage, Patient, Doctor
 from app.utils.auth import token_required, get_current_user
 from app.utils.ai_helper import AIHealthAssistant
+from datetime import datetime
 
 chat_bp = Blueprint('chat', __name__)
 
@@ -47,7 +48,8 @@ def chat_with_ai():
             user_id=user.id,
             message_type='user',
             content=message_content,
-            context={'patient_id': patient_id} if patient_id else None
+            patient_id=patient_id,
+            doctor_id=Doctor.query.filter_by(user_id=user.id).first().id if user.role == 'doctor' else None
         )
         db.session.add(user_message)
         
@@ -67,7 +69,8 @@ def chat_with_ai():
             user_id=user.id,
             message_type='ai',
             content=ai_response['response'],
-            context={'patient_id': patient_id} if patient_id else None
+            patient_id=patient_id,
+            doctor_id=Doctor.query.filter_by(user_id=user.id).first().id if user.role == 'doctor' else None
         )
         db.session.add(ai_message)
         
@@ -79,6 +82,9 @@ def chat_with_ai():
         }), 200
         
     except Exception as e:
+        print(f"❌ Chat error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
@@ -94,11 +100,9 @@ def get_chat_history():
         
         query = ChatMessage.query.filter_by(user_id=user.id)
         
-        # Filter by patient context if specified
+        # Filter by patient_id if specified
         if patient_id:
-            query = query.filter(
-                ChatMessage.context['patient_id'].astext == str(patient_id)
-            )
+            query = query.filter_by(patient_id=patient_id)
         
         messages = query.order_by(
             ChatMessage.created_at.desc()
@@ -112,6 +116,7 @@ def get_chat_history():
         }), 200
         
     except Exception as e:
+        print(f"❌ History error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 
@@ -140,21 +145,23 @@ def analyze_patient_health(patient_id):
         if not assignment:
             return jsonify({'error': 'Access denied to this patient'}), 403
         
+        print(f"🔍 Analyzing patient {patient_id} for doctor {doctor.id}")
+        
         # Get AI analysis
         analysis = AIHealthAssistant.analyze_health_trends(patient_id)
         
         if not analysis['success']:
             return jsonify({'error': analysis.get('error', 'Analysis failed')}), 500
         
+        print(f"✅ Analysis complete")
+        
         # Save analysis as AI message
         ai_message = ChatMessage(
             user_id=user.id,
             message_type='ai',
             content=analysis['analysis'],
-            context={
-                'patient_id': patient_id,
-                'analysis_type': 'health_trends'
-            }
+            patient_id=patient_id,
+            doctor_id=doctor.id
         )
         db.session.add(ai_message)
         db.session.commit()
@@ -165,6 +172,9 @@ def analyze_patient_health(patient_id):
         }), 200
         
     except Exception as e:
+        print(f"❌ Analysis endpoint error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
@@ -180,9 +190,7 @@ def clear_chat_history():
         query = ChatMessage.query.filter_by(user_id=user.id)
         
         if patient_id:
-            query = query.filter(
-                ChatMessage.context['patient_id'].astext == str(patient_id)
-            )
+            query = query.filter_by(patient_id=patient_id)
         
         deleted_count = query.delete()
         db.session.commit()

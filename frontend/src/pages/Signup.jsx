@@ -13,6 +13,11 @@ export default function Signup() {
     phone: '',
     specialization: '',
     license_number: '',
+    location: '',
+    years_of_experience: '',
+    qualifications: '',
+    bio: '',
+    availability: '',
     gender: '',
     blood_group: '',
   });
@@ -59,7 +64,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8">
         <div className="flex justify-center mb-6">
           <div className="bg-blue-500 p-3 rounded-full">
             <Heart className="w-8 h-8 text-white" />
@@ -187,28 +192,105 @@ export default function Signup() {
 
           {/* Doctor-specific fields */}
           {formData.role === 'doctor' && (
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-4 p-6 bg-blue-50 rounded-xl border-2 border-blue-100">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">Professional Information</h3>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Specialization
+                  </label>
+                  <input
+                    type="text"
+                    name="specialization"
+                    value={formData.specialization}
+                    onChange={handleChange}
+                    placeholder="e.g., Cardiology, Pediatrics"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    License Number
+                  </label>
+                  <input
+                    type="text"
+                    name="license_number"
+                    value={formData.license_number}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Years of Experience
+                  </label>
+                  <input
+                    type="number"
+                    name="years_of_experience"
+                    value={formData.years_of_experience}
+                    onChange={handleChange}
+                    min="0"
+                    placeholder="e.g., 5"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    placeholder="Clinic/Hospital address"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Specialization
+                  Qualifications
                 </label>
                 <input
                   type="text"
-                  name="specialization"
-                  value={formData.specialization}
+                  name="qualifications"
+                  value={formData.qualifications}
                   onChange={handleChange}
+                  placeholder="e.g., MBBS, MD, Board Certified"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  License Number
+                  Availability
                 </label>
                 <input
                   type="text"
-                  name="license_number"
-                  value={formData.license_number}
+                  name="availability"
+                  value={formData.availability}
                   onChange={handleChange}
+                  placeholder="e.g., Mon-Fri 9AM-5PM"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Bio/About
+                </label>
+                <textarea
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  placeholder="Tell patients about yourself and your practice"
+                  rows="3"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>

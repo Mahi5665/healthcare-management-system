@@ -20,13 +20,24 @@ export default function Login() {
     try {
       const user = await login(email, password);
       
+      // Wait longer to ensure token is properly set
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // Verify token was saved
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not saved properly');
+      }
+      
+      // Navigate based on role
       if (user.role === 'doctor') {
-        navigate('/doctor/dashboard');
+        navigate('/doctor/dashboard', { replace: true });
       } else {
-        navigate('/patient/dashboard');
+        navigate('/patient/dashboard', { replace: true });
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+      setError(err.response?.data?.error || err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

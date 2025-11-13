@@ -9,9 +9,32 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
+    # CRITICAL: Configure JWT to accept tokens from Authorization header
+    app.config['JWT_TOKEN_LOCATION'] = ['headers']
+    app.config['JWT_HEADER_NAME'] = 'Authorization'
+    app.config['JWT_HEADER_TYPE'] = 'Bearer'
+    
     # Initialize extensions
     db.init_app(app)
-    CORS(app)
+    
+    # Configure CORS with proper settings
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": [
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://172.190.189.124:3000",
+            "http://172.190.189.124:5173",
+            "http://172.190.189.124:5000",
+            "http://172.190.189.124"
+        ],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "expose_headers": ["Content-Type", "Authorization"],
+            "supports_credentials": False
+        }
+    })
+    
     JWTManager(app)
     Migrate(app, db)
     
@@ -32,5 +55,10 @@ def create_app():
     @app.route('/api/health')
     def health_check():
         return {'status': 'healthy', 'message': 'Healthcare API is running'}
+    
+    # Root endpoint
+    @app.route('/')
+    def root():
+        return {'message': 'Healthcare System API', 'version': '1.0'}
     
     return app

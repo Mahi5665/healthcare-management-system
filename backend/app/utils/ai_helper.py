@@ -1,9 +1,10 @@
-import openai
+from openai import OpenAI
 from app.config import Config
 from app.models import Patient, HealthMetric, MedicalRecord
 from datetime import datetime, timedelta
 
-openai.api_key = Config.OPENAI_API_KEY
+# Initialize OpenAI client
+client = OpenAI(api_key=Config.OPENAI_API_KEY)
 
 class AIHealthAssistant:
     
@@ -108,8 +109,9 @@ class AIHealthAssistant:
             
             messages.append({"role": "user", "content": message})
             
-            response = openai.chat.completions.create(
-                model="gpt-4",
+            # Use new OpenAI client API
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",  # Updated to use gpt-4o-mini (cheaper and faster)
                 messages=messages,
                 max_tokens=500,
                 temperature=0.7
@@ -121,6 +123,9 @@ class AIHealthAssistant:
             }
             
         except Exception as e:
+            print(f"❌ AI Error: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return {
                 'success': False,
                 'error': f"AI Error: {str(e)}"
@@ -148,8 +153,9 @@ class AIHealthAssistant:
             3. Recommendations for the doctor
             """
             
-            response = openai.chat.completions.create(
-                model="gpt-4",
+            # Use new OpenAI client API
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a medical AI analyzing patient health trends."},
                     {"role": "user", "content": prompt}
@@ -164,6 +170,9 @@ class AIHealthAssistant:
             }
             
         except Exception as e:
+            print(f"❌ Analysis Error: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return {
                 'success': False,
                 'error': f"Analysis Error: {str(e)}"

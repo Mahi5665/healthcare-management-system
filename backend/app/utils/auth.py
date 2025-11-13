@@ -10,7 +10,11 @@ def token_required(f):
             verify_jwt_in_request()
             return f(*args, **kwargs)
         except Exception as e:
-            return jsonify({'error': 'Invalid or expired token'}), 401
+            # Better error logging
+            print(f"Token verification failed: {type(e).__name__}: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({'error': f'Invalid or expired token: {str(e)}'}), 401
     return decorated
 
 def role_required(role):
@@ -20,7 +24,8 @@ def role_required(role):
             try:
                 verify_jwt_in_request()
                 current_user_id = get_jwt_identity()
-                user = User.query.get(current_user_id)
+                # Convert string back to int
+                user = User.query.get(int(current_user_id))
                 
                 if not user:
                     return jsonify({'error': 'User not found'}), 404
@@ -30,6 +35,9 @@ def role_required(role):
                 
                 return f(*args, **kwargs)
             except Exception as e:
+                print(f"Role verification failed: {type(e).__name__}: {str(e)}")
+                import traceback
+                traceback.print_exc()
                 return jsonify({'error': str(e)}), 401
         return decorated
     return decorator
@@ -38,6 +46,9 @@ def get_current_user():
     """Helper function to get current user from JWT"""
     try:
         current_user_id = get_jwt_identity()
-        return User.query.get(current_user_id)
-    except:
+        # Convert string back to int
+        return User.query.get(int(current_user_id))
+    except Exception as e:
+        print(f"Get current user failed: {type(e).__name__}: {str(e)}")
         return None
+    

@@ -1,0 +1,31 @@
+🩺 Blood Pressure (BP) Metrics
+
+Blood pressure is one of the most important indicators of cardiovascular health. It measures the force of blood pushing against the walls of the arteries as the heart pumps. Blood pressure is recorded using two key values:
+
+Systolic Pressure: This is the higher number and represents the pressure in the arteries when the heart contracts and pumps blood. A normal systolic reading typically ranges between 90 and 120 mmHg.
+
+Diastolic Pressure: This is the lower number and measures the pressure in the arteries when the heart is resting between beats. A normal diastolic reading generally falls between 60 and 80 mmHg.
+
+Additional useful values include:
+
+Mean Arterial Pressure (MAP): Represents the average pressure in a person’s arteries during one cardiac cycle. A normal MAP is usually between 70 and 100 mmHg.
+
+Pulse Pressure: The difference between systolic and diastolic pressures. A normal range is around 30 to 50 mmHg.
+
+Based on these measurements, blood pressure can be categorized into different status levels such as Normal, Elevated, or High (Hypertension). Monitoring BP regularly helps in detecting heart-related risks early and maintaining cardiovascular health.
+
+🍬 Blood Sugar (Glucose) Metrics
+
+Blood sugar, or blood glucose, indicates the amount of sugar (glucose) present in the bloodstream. It is a critical parameter for assessing metabolic health and detecting conditions such as diabetes or prediabetes.
+
+The key blood sugar metrics include:
+
+Fasting Glucose: Measured after at least eight hours without eating. Normal fasting glucose levels range between 70 and 99 mg/dL.
+
+Post-Meal (Postprandial) Glucose: Measured about two hours after eating. A normal reading is below 140 mg/dL.
+
+Random Glucose: This can be taken at any time of day, regardless of meals. Normal values are typically below 200 mg/dL.
+
+HbA1c (Glycated Hemoglobin): Reflects the average blood sugar level over the past 2–3 months. A normal HbA1c value is below 5.7%.
+
+Blood sugar readings are classified into categories such as Normal, Prediabetic, and Diabetic, depending on the levels. Continuous monitoring helps in maintaining balanced glucose levels and preventing complications related to diabetes.

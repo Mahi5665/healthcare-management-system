@@ -42,30 +42,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
-    const response = await authAPI.login({ email, password });
-    const { access_token, user, profile } = response.data;
-    
-    localStorage.setItem('token', access_token);
-    localStorage.setItem('user', JSON.stringify(user));
-    
-    setUser(user);
-    setProfile(profile);
-    
-    return user;
-  };
+const login = async (email, password) => {
+  const response = await authAPI.login({ email, password });
+  const { access_token, user, profile } = response.data;
+  
+  localStorage.setItem('token', access_token);
+  localStorage.setItem('user', JSON.stringify(user));
+  
+  // Small delay to ensure localStorage write completes
+  await new Promise(resolve => setTimeout(resolve, 50));
+  
+  setUser(user);
+  setProfile(profile);
+  
+  return user;
+};
 
-  const signup = async (data) => {
-    const response = await authAPI.signup(data);
-    const { access_token, user } = response.data;
-    
-    localStorage.setItem('token', access_token);
-    localStorage.setItem('user', JSON.stringify(user));
-    
-    setUser(user);
-    
-    return user;
-  };
+const signup = async (data) => {
+  const response = await authAPI.signup(data);
+  const { access_token, user } = response.data;
+  
+  // CRITICAL: Set token FIRST, then set state
+  localStorage.setItem('token', access_token);
+  localStorage.setItem('user', JSON.stringify(user));
+  
+  // Add a small delay to ensure localStorage is written
+  await new Promise(resolve => setTimeout(resolve, 100));
+  
+  setUser(user);
+  
+  return user;
+};
 
   const logout = () => {
     localStorage.removeItem('token');
